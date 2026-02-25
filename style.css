@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #b1d1d8;
+    background-image: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+    min-height: 100vh;
+    font-family: 'DotGothic16', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    margin-top: 50px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-decor {
+    position: relative;
+    height: 120px;
+    margin-bottom: 20px;
+}
+
+.page-title {
+    font-size: 32px;
+    color: #000;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    transform: rotate(-7deg);
+    /* Tilted */
+    z-index: 2;
+}
+
+.triangle {
+    position: absolute;
+    color: #e54c7c;
+    font-size: 30px;
+    animation: rotateTriangle 6s linear infinite;
+}
+
+.tri-1 {
+    top: 0px;
+    left: 80px;
+}
+
+.tri-2 {
+    top: 90px;
+    left: 280px;
+}
+
+@keyframes rotateTriangle {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.subtitle {
+    color: #fff;
+    font-size: 18px;
+    text-align: right;
+    margin-right: 20px;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    position: relative;
+}
+
+/* The RPG Window */
+.window-container {
+    position: relative;
+    width: 100%;
+    background-color: #000;
+    border-radius: 8px;
+    /* CSS logic to create double border effect typical of retro RPG windows */
+    border: 4px solid #fff;
+    box-shadow:
+        0 0 0 2px #000,
+        inset 0 0 0 3px #000,
+        inset 0 0 0 5px #fff;
+    padding: 30px;
+    min-height: 350px;
+    z-index: 1;
+}
+
+/* The Character overlapping the window */
+.character-img {
+    position: absolute;
+    top: -240px;
+    /* Shifted up from -190px to make character sit on window */
+    right: -20px;
+    width: 200px;
+    z-index: 10;
+    pointer-events: none;
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+.games-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+    padding-right: 50px;
+    /* Leave space for dangling legs so text isn't obscured entirely */
+}
+
+.games-list li {
+    display: flex;
+    align-items: center;
+}
+
+.games-list a {
+    color: #fff;
+    text-decoration: underline;
+    font-size: 20px;
+    transition: color 0.2s;
+}
+
+.games-list a:hover {
+    color: #ffb6c1;
+    text-shadow: 0 0 8px rgba(255, 182, 193, 0.8);
+}
+
+.new-badge {
+    font-size: 16px;
+    margin-right: 10px;
+    animation: rumble 0.2s infinite;
+    display: inline-block;
+}
+
+@keyframes rumble {
+    0% {
+        transform: translate(1px, 1px) rotate(0deg);
+    }
+
+    10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+    }
+
+    20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+    }
+
+    30% {
+        transform: translate(3px, 2px) rotate(0deg);
+    }
+
+    40% {
+        transform: translate(1px, -1px) rotate(1deg);
+    }
+
+    50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+    }
+
+    60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+    }
+
+    70% {
+        transform: translate(3px, 1px) rotate(-1deg);
+    }
+
+    80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+    }
+
+    90% {
+        transform: translate(1px, 2px) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+    }
+}
+
+.footer-links {
+    margin-top: 25px;
+    text-align: center;
+    color: #000;
+}
+
+.footer-links a {
+    color: #000;
+    text-decoration: underline;
+    font-size: 20px;
+    margin: 0 10px;
+    transition: opacity 0.2s;
+}
+
+.footer-links a:hover {
+    opacity: 0.7;
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 26px;
+    }
+
+    .character-img {
+        width: 160px;
+        top: -150px;
+        right: -10px;
+    }
+
+    .games-list a {
+        font-size: 18px;
+    }
+}
