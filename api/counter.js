@@ -1,7 +1,7 @@
 export default async function handler(request, response) {
-    // Vercel KV REST API URLs are automatically provided via Environment Variables
-    const KV_REST_API_URL = process.env.KV_REST_API_URL;
-    const KV_REST_API_TOKEN = process.env.KV_REST_API_TOKEN;
+    // Support both classic Vercel KV and Upstash Marketplace variables
+    const KV_REST_API_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+    const KV_REST_API_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 
     if (!KV_REST_API_URL || !KV_REST_API_TOKEN) {
         return response.status(500).json({ error: 'KV database is not configured. Please link a Vercel KV store.' });
