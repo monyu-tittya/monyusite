@@ -155,9 +155,40 @@ body {
     right: -50px;
     width: 200px;
     z-index: 10;
-    pointer-events: none;
+    cursor: pointer;
+    /* クリップできるように変更 */
+    pointer-events: auto;
+    /* イベントを受け付ける */
     /* Jagged shadow using hard drop-shadows */
     filter: drop-shadow(4px 4px 0px #000);
+    transition: transform 0.1s;
+}
+
+.character-img:active {
+    transform: scale(0.95);
+    /* いじめようとクリックした時の反応 */
+}
+
+/* 飛んでくるカラス（邪魔者） */
+.crow-img {
+    position: fixed;
+    top: -500px;
+    /* 画面外から */
+    right: -500px;
+    width: 300px;
+    z-index: 100;
+    pointer-events: none;
+    /* クリックをすり抜ける */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* 少し跳ねるような動き */
+    filter: drop-shadow(5px 5px 0px #000);
+}
+
+.crow-img.fly-in {
+    top: 50px;
+    /* キャラクターの上辺りに飛んでくる */
+    right: 50px;
+    transform: rotate(-15deg) scale(1.1);
 }
 
 /* Retro HPB-style Header Area (Left of Character) */
@@ -239,6 +270,19 @@ body {
     gap: 5px;
     /* ジャギジャギの影（ぼかし無し） */
     box-shadow: 4px 4px 0px #000;
+
+    /* 昔のJavaアプレット/Marquee風の左右移動アニメーション */
+    animation: appletBounce 4s ease-in-out infinite alternate;
+}
+
+@keyframes appletBounce {
+    0% {
+        transform: translateX(-15px);
+    }
+
+    100% {
+        transform: translateX(35px);
+    }
 }
 
 .counter-digits {

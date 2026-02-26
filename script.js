@@ -75,4 +75,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 counterContainer.innerHTML = '<span>E</span><span>R</span><span>R</span><span>O</span><span>R</span>';
             });
     }
+
+    // Crow interference feature
+    const charImg = document.getElementById('character-img');
+    const crowImg = document.getElementById('crow-img');
+
+    if (charImg && crowImg) {
+        let isCrowVisible = false;
+
+        charImg.addEventListener('click', () => {
+            if (!isCrowVisible) {
+                isCrowVisible = true;
+                crowImg.classList.add('fly-in');
+
+                // Crow leaves after 2.5 seconds
+                setTimeout(() => {
+                    crowImg.classList.remove('fly-in');
+                    isCrowVisible = false;
+                }, 2500);
+            }
+        });
+    }
 });
