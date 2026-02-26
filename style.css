@@ -175,19 +175,20 @@ body {
     top: -500px;
     /* 画面外から */
     right: -500px;
-    width: 300px;
+    width: 150px;
+    /* 50%に縮小 */
     z-index: 100;
     pointer-events: none;
     /* クリックをすり抜ける */
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     /* 少し跳ねるような動き */
-    filter: drop-shadow(5px 5px 0px #000);
+    filter: drop-shadow(3px 3px 0px #000);
 }
 
 .crow-img.fly-in {
-    top: 50px;
+    top: 30px;
     /* キャラクターの上辺りに飛んでくる */
-    right: 50px;
+    right: 30px;
     transform: rotate(-15deg) scale(1.1);
 }
 
@@ -476,11 +477,12 @@ body {
     padding: 2px 4px;
     background-color: #c0c0c0;
     color: #000;
-    font-size: 13px;
+    font-size: 12px;
     margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    /* 折り返して全文表示 */
+    word-break: break-all;
+    overflow-wrap: break-word;
     /* Win95 classic status bar text inset */
     box-shadow: -1px -1px 0 #808080 inset, 1px 1px 0 #dfdfdf inset;
 }
@@ -492,42 +494,67 @@ body {
 
     /* キャラクター画像の縮小と配置調整（重なり防止） */
     .character-img {
-        width: 140px;
-        /* 少し小さく */
-        top: -150px;
-        right: -10px;
-        /* 右上に寄せる */
+        width: 100px;
+        top: -90px;
+        right: -5px;
     }
 
     /* レトロヘッダー（バナー）のサイズ調整 */
     .retro-banner {
-        font-size: 24px;
-        padding-bottom: 4px;
-        /* 文字間隔は少し詰めるだけ */
+        font-size: 18px;
+        padding-bottom: 2px;
         letter-spacing: -1px;
     }
 
     .retro-banner::before {
-        -webkit-text-stroke: 6px #fff;
-        /* 枠の太さも少し細く */
-        filter: drop-shadow(3px 3px 0px #000);
+        -webkit-text-stroke: 4px #fff;
+        filter: drop-shadow(2px 2px 0px #000);
     }
 
     .retro-header {
-        align-items: flex-start;
-        /* 左寄りベース */
-        gap: 10px;
-        margin-bottom: 25px;
-        /* 下の要素と少し間を開ける */
+        position: absolute;
+        top: -100px;
+        left: 5px;
+        gap: 5px;
+    }
+
+    .retro-counter {
+        font-size: 11px;
+        padding: 2px 4px;
+    }
+
+    .counter-digits span {
+        font-size: 14px;
+        padding: 1px 3px;
     }
 
     /* タップしやすいようにリンクの余白を増やす */
     .games-list a {
-        padding: 12px 6px;
+        padding: 10px 4px;
+        font-size: 15px;
     }
 
     /* モバイル環境ではツールチップを強制非表示（ステータスバーを優先） */
     #description-box {
         display: none !important;
+    }
+
+    /* カラスも小さく */
+    .crow-img {
+        width: 100px;
+    }
+
+    .crow-img.fly-in {
+        top: 20px;
+        right: 10px;
+    }
+
+    /* ウィンドウの余白を減らす */
+    .window-container {
+        padding: 2px;
+    }
+
+    .container {
+        padding-top: 110px;
     }
 }
