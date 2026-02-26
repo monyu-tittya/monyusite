@@ -1,47 +1,84 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>つくったゲーム一覧</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
+
 <body>
     <div class="container">
-        <!-- Decoration and Title -->
-        <div class="header-decor">
-            <div class="triangle tri-1">▲</div>
-            <div class="triangle tri-2">▲</div>
-            <h1 class="page-title">つくったゲーム一覧</h1>
-        </div>
-
-        <div class="subtitle">※チョコメーカー以外BCパロです</div>
-
-        <!-- The main window content -->
+        <!-- The main window content (Windows 95 Dialog Style) -->
         <div class="window-container">
-            <!-- The character image overlapping the top right -->
-            <img src="images/character.png" alt="Character Illustration" class="character-img">
+            <!-- Retro Header (Banner and Counter) -->
+            <div class="retro-header">
+                <div class="retro-banner" data-text="もにゅのホームページだよ"></div>
+                <div class="retro-counter">
+                    あなたは <span class="counter-digits" id="hit-counter">
+                        <!-- Digits injected by JS -->
+                        <span>0</span><span>0</span><span>0</span><span>0</span><span>0</span>
+                    </span> 人目のお客様です
+                </div>
+            </div>
 
-            <!-- Links list -->
-            <ul class="games-list">
-                <li><a href="https://bakagame.vercel.app/" target="_blank">カオス・ラバーズ</a></li>
-                <li><a href="https://sonemi-fight.vercel.app/" target="_blank">頑張れ‼そねみちゃん</a></li>
-                <li><a href="https://kisekae-satoshi.vercel.app/" target="_blank">Kisekae Satoshi</a></li>
-                <li><a href="https://choco-zeta.vercel.app/" target="_blank">チョコメーカー</a></li>
-                <li><a href="https://iota-phi.vercel.app/" target="_blank">イオタ先生の「曲がっています！」</a></li>
-                <li>
-                    <span class="new-badge">new</span>
-                    <a href="https://fruitsgame.vercel.app/" target="_blank">ブラさと風味ス〇カゲーム</a>
-                </li>
-            </ul>
+            <!-- Title Bar -->
+            <div class="title-bar">
+                <div class="title-bar-text">
+                    <img src="https://win98icons.alexmeub.com/icons/png/directory_explorer-0.png" alt="icon"
+                        class="title-bar-icon">
+                    つくったゲーム一覧
+                </div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+
+            <!-- Menu Bar -->
+            <div class="menu-bar">
+                <a href="https://x.com/monyu_tittya" target="_blank">X</a>
+                <a href="#" target="_blank">pixiv</a>
+                <a href="#" target="_blank">ポイピク</a>
+            </div>
+
+            <!-- Window Body -->
+            <div class="window-body">
+                <div class="subtitle">※チョコメーカー以外BCパロです</div>
+                <!-- The character image overlapping the top right -->
+                <img src="images/character.png" alt="Character Illustration" class="character-img">
+
+                <!-- Links list -->
+                <ul class="games-list">
+                    <li><a href="https://bakagame.vercel.app/" target="_blank"
+                            data-description="混沌とした恋愛（？）シミュレーションゲームです。選択肢によって運命が変わります。">カオス・ラバーズ</a></li>
+                    <li><a href="https://sonemi-fight.vercel.app/" target="_blank"
+                            data-description="そねみちゃんが頑張って戦うアクションゲームです。リズムに合わせて攻撃！">頑張れ‼そねみちゃん</a></li>
+                    <li><a href="https://kisekae-satoshi.vercel.app/" target="_blank"
+                            data-description="サトシを自由に着せ替えられるファンゲームです。色々な衣装を楽しめます。">Kisekae Satoshi</a></li>
+                    <li><a href="https://choco-zeta.vercel.app/" target="_blank"
+                            data-description="オリジナルのバレンタインチョコを作れるデコレーションゲームです。">チョコメーカー</a></li>
+                    <li><a href="https://iota-phi.vercel.app/" target="_blank"
+                            data-description="イオタ先生と一緒に曲がったものを直していく（？）パズル風ゲームです。">イオタ先生の「曲がっています！」</a></li>
+                    <li>
+                        <span class="new-badge">new</span>
+                        <a href="https://fruitsgame.vercel.app/" target="_blank"
+                            data-description="ブラさと風のフルーツをくっつけて大きくするパズルゲームです。">ブラさと風味ス〇カゲーム</a>
+                    </li>
+                </ul>
+
+            </div>
         </div>
 
-        <!-- Profile Links at the bottom -->
-        <div class="footer-links">
-            <a href="https://x.com/monyu_tittya" target="_blank">X</a>
-            <a href="#" target="_blank">pixiv</a>
-            <a href="#" target="_blank">ポイピク</a>
-        </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- Classic Win95 Tooltip Sub-window -->
+    <div id="description-box" class="sub-window">
+        <p id="description-text"></p>
     </div>
 </body>
+
 </html>
