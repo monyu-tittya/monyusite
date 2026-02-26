@@ -2,32 +2,80 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameLinks = document.querySelectorAll('.games-list a');
     const descriptionBox = document.getElementById('description-box');
     const descriptionText = document.getElementById('description-text');
+    const statusText = document.getElementById('status-text');
     let isHovering = false;
+    let lastTappedLink = null;
+    let tapTimeout = null;
+
+    // basic touch detection
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     gameLinks.forEach(link => {
         link.addEventListener('mouseenter', (e) => {
+            if (isTouchDevice) return; // スマホではホバーのツールチップ処理を無視
             const description = e.currentTarget.getAttribute('data-description');
             if (description) {
                 descriptionText.textContent = description;
                 descriptionBox.classList.add('active');
+                if (statusText) statusText.textContent = description;
                 isHovering = true;
             }
         });
 
         // Update tooltip position based on mouse movement
         link.addEventListener('mousemove', (e) => {
-            if (isHovering) {
-                // Offset the tooltip slightly from the cursor (Win95 style, bottom-right)
-                const offsetX = 15;
-                const offsetY = 20;
-                descriptionBox.style.left = `${e.pageX + offsetX}px`;
-                descriptionBox.style.top = `${e.pageY + offsetY}px`;
-            }
+            if (isTouchDevice || !isHovering) return;
+            const offsetX = 15;
+            const offsetY = 20;
+            descriptionBox.style.left = `${e.pageX + offsetX}px`;
+            descriptionBox.style.top = `${e.pageY + offsetY}px`;
         });
 
         link.addEventListener('mouseleave', () => {
+            if (isTouchDevice) return;
             descriptionBox.classList.remove('active');
+            if (statusText) statusText.textContent = 'Ready';
             isHovering = false;
+        });
+
+        // モバイル向けタップ制御（1回目で説明、2回目で飛ぶ）
+        link.addEventListener('click', (e) => {
+            if (isTouchDevice) {
+                if (lastTappedLink !== link) {
+                    // 1回目のタップ
+                    e.preventDefault();
+
+                    // リセット
+                    gameLinks.forEach(l => {
+                        l.style.backgroundColor = '';
+                        l.style.color = '';
+                    });
+
+                    // 選択状態
+                    link.style.backgroundColor = '#000080';
+                    link.style.color = '#fff';
+
+                    const description = link.getAttribute('data-description');
+                    if (statusText) statusText.textContent = description;
+
+                    lastTappedLink = link;
+
+                    clearTimeout(tapTimeout);
+                    tapTimeout = setTimeout(() => {
+                        lastTappedLink = null;
+                        link.style.backgroundColor = '';
+                        link.style.color = '';
+                        if (statusText) statusText.textContent = 'Ready';
+                    }, 5000);
+                } else {
+                    // 2回目タップで通常遷移
+                    clearTimeout(tapTimeout);
+                    lastTappedLink = null;
+                    if (statusText) statusText.textContent = 'Opening link...';
+                }
+            } else {
+                if (statusText) statusText.textContent = 'Opening link...';
+            }
         });
     });
 
