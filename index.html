@@ -31,7 +31,7 @@
             <!-- Title Bar -->
             <div class="title-bar">
                 <div class="title-bar-text">
-                    📂つくったゲーム一覧
+                    📂つくったゲーム一覧<span id="minesweeper-btn" style="cursor: pointer;" title="Minesweeper">💣️</span>
                 </div>
                 <div class="title-bar-controls">
                     <button aria-label="Close"></button>
@@ -83,6 +83,32 @@
         </div>
     </div>
 
+    <!-- Minesweeper Modal -->
+    <div id="minesweeper-modal" class="ms-modal" style="display: none;">
+        <div class="ms-window">
+            <div class="title-bar">
+                <div class="title-bar-text">
+                    <span style="font-size: 14px; margin-right: 4px;">💣️</span>
+                    Minesweeper
+                </div>
+                <div class="title-bar-controls">
+                    <button id="ms-close-btn" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="ms-body">
+                <div class="ms-header">
+                    <div class="ms-counter" id="ms-mine-count">010</div>
+                    <button class="ms-face-btn" id="ms-reset-btn">
+                        <span id="ms-face-emoji" style="font-size: 18px; line-height: 1;">😊</span>
+                    </button>
+                    <div class="ms-counter" id="ms-timer">000</div>
+                </div>
+                <div class="ms-grid" id="ms-grid">
+                    <!-- JS will generate the 9x9 grid cells here -->
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

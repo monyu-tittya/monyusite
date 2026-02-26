@@ -171,4 +171,320 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2000);
         }, 60000); // 60000ms = 1 minute
     }
+
+    // =====================================
+    // Minesweeper Logic (Win95 Style)
+    // =====================================
+    const msBtn = document.getElementById('minesweeper-btn');
+    const msModal = document.getElementById('minesweeper-modal');
+    const msCloseBtn = document.getElementById('ms-close-btn');
+    const msGrid = document.getElementById('ms-grid');
+    const msMineCount = document.getElementById('ms-mine-count');
+    const msTimerDisplay = document.getElementById('ms-timer');
+    const msResetBtn = document.getElementById('ms-reset-btn');
+    const msFaceEmoji = document.getElementById('ms-face-emoji');
+
+    if (msBtn && msModal) {
+        let rows = 9, cols = 9, totalMines = 10;
+        let board = [];
+        let gameOver = false;
+        let firstClick = true;
+        let flagsPlaced = 0;
+        let timer = 0;
+        let timerInterval = null;
+
+        // スマホ用長押し判定変数
+        let longPressTimer = null;
+        let isLongPress = false;
+
+        function updateCounterDisplay(element, value) {
+            element.textContent = String(Math.max(0, value)).padStart(3, '0');
+        }
+
+        function initMinesweeper() {
+            board = [];
+            gameOver = false;
+            firstClick = true;
+            flagsPlaced = 0;
+            timer = 0;
+            clearInterval(timerInterval);
+            msFaceEmoji.textContent = '😊';
+            updateCounterDisplay(msMineCount, totalMines);
+            updateCounterDisplay(msTimerDisplay, 0);
+            msGrid.innerHTML = '';
+
+            // Create empty board
+            for (let r = 0; r < rows; r++) {
+                let row = [];
+                for (let c = 0; c < cols; c++) {
+                    row.push({
+                        r, c,
+                        isMine: false,
+                        isRevealed: false,
+                        isFlagged: false,
+                        neighborMines: 0
+                    });
+
+                    const cellHtml = document.createElement('div');
+                    cellHtml.className = 'ms-cell';
+                    cellHtml.dataset.r = r;
+                    cellHtml.dataset.c = c;
+
+                    // Events for PC
+                    cellHtml.addEventListener('mousedown', handleCellMouseDown);
+                    cellHtml.addEventListener('mouseup', handleCellMouseUp);
+                    cellHtml.addEventListener('contextmenu', (e) => e.preventDefault());
+
+                    // Events for Mobile (Long press for flag)
+                    cellHtml.addEventListener('touchstart', handleTouchStart, { passive: false });
+                    cellHtml.addEventListener('touchend', handleTouchEnd);
+                    cellHtml.addEventListener('touchmove', handleTouchMove);
+
+                    msGrid.appendChild(cellHtml);
+                }
+                board.push(row);
+            }
+        }
+
+        function placeMines(firstR, firstC) {
+            let minesToPlace = totalMines;
+            while (minesToPlace > 0) {
+                let r = Math.floor(Math.random() * rows);
+                let c = Math.floor(Math.random() * cols);
+                // Don't place mine on first click or already placed mine
+                if (!board[r][c].isMine && !(Math.abs(r - firstR) <= 1 && Math.abs(c - firstC) <= 1)) {
+                    board[r][c].isMine = true;
+                    minesToPlace--;
+                }
+            }
+            // Calculate neighbors
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (!board[r][c].isMine) {
+                        board[r][c].neighborMines = countNeighborMines(r, c);
+                    }
+                }
+            }
+        }
+
+        function countNeighborMines(r, c) {
+            let count = 0;
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    let nr = r + dr;
+                    let nc = c + dc;
+                    if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && board[nr][nc].isMine) {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        function getCellHtml(r, c) {
+            return msGrid.children[r * cols + c];
+        }
+
+        function handleCellMouseDown(e) {
+            if (gameOver || isLongPress) return;
+            // Left click = 0, Right click = 2
+            if (e.button === 0) {
+                msFaceEmoji.textContent = '😮';
+            }
+        }
+
+        function handleCellMouseUp(e) {
+            // isLongPress flag protection for mobile
+            if (isLongPress) {
+                setTimeout(() => isLongPress = false, 50);
+                return;
+            }
+            if (gameOver) return;
+            msFaceEmoji.textContent = '😊';
+
+            const r = parseInt(e.target.dataset.r);
+            const c = parseInt(e.target.dataset.c);
+
+            // Right click
+            if (e.button === 2) {
+                toggleFlag(r, c);
+                return;
+            }
+
+            // Left click
+            if (e.button === 0) {
+                if (!board[r][c].isFlagged) {
+                    revealCell(r, c);
+                }
+            }
+        }
+
+        // スマホ用タッチイベントハンドラ
+        function handleTouchStart(e) {
+            if (gameOver) return;
+            e.preventDefault(); // マウスイベントの二重発火防止
+            msFaceEmoji.textContent = '😮';
+            isLongPress = false;
+
+            const r = parseInt(e.target.dataset.r);
+            const c = parseInt(e.target.dataset.c);
+
+            // 長押しタイマー開始 (400ms)
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                toggleFlag(r, c);
+                if (navigator.vibrate) navigator.vibrate(50); // ブルッと震える
+                msFaceEmoji.textContent = '😊';
+            }, 400);
+        }
+
+        function handleTouchEnd(e) {
+            if (gameOver) return;
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+            }
+            msFaceEmoji.textContent = '😊';
+
+            // 長押し判定されていなければ通常の左クリック扱い
+            if (!isLongPress) {
+                const r = parseInt(e.target.dataset.r);
+                const c = parseInt(e.target.dataset.c);
+                if (!board[r][c].isFlagged) {
+                    revealCell(r, c);
+                }
+            }
+        }
+
+        function handleTouchMove(e) {
+            // スワイプ等の動きがあったら長押しキャンセル
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+            }
+        }
+
+        function toggleFlag(r, c) {
+            const cell = board[r][c];
+            if (cell.isRevealed) return;
+
+            const cellHtml = getCellHtml(r, c);
+            if (cell.isFlagged) {
+                cell.isFlagged = false;
+                cellHtml.textContent = '';
+                flagsPlaced--;
+            } else {
+                if (flagsPlaced < totalMines) {
+                    cell.isFlagged = true;
+                    cellHtml.textContent = '🚩';
+                    flagsPlaced++;
+                }
+            }
+            updateCounterDisplay(msMineCount, totalMines - flagsPlaced);
+        }
+
+        function revealCell(r, c) {
+            const cell = board[r][c];
+            if (cell.isRevealed || cell.isFlagged || gameOver) return;
+
+            if (firstClick) {
+                firstClick = false;
+                placeMines(r, c);
+                timerInterval = setInterval(() => {
+                    timer++;
+                    if (timer > 999) timer = 999;
+                    updateCounterDisplay(msTimerDisplay, timer);
+                }, 1000);
+            }
+
+            cell.isRevealed = true;
+            const cellHtml = getCellHtml(r, c);
+            cellHtml.classList.add('revealed');
+
+            if (cell.isMine) {
+                // Game Over
+                gameOver = true;
+                clearInterval(timerInterval);
+                msFaceEmoji.textContent = '💥'; // Dead face equivalent
+                cellHtml.classList.add('mine');
+                cellHtml.textContent = '💣';
+                revealAllMines();
+                return;
+            }
+
+            if (cell.neighborMines > 0) {
+                cellHtml.textContent = cell.neighborMines;
+                cellHtml.classList.add(`num-${cell.neighborMines}`);
+            } else {
+                // Flood fill
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        let nr = r + dr;
+                        let nc = c + dc;
+                        if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+                            revealCell(nr, nc);
+                        }
+                    }
+                }
+            }
+
+            checkWinCondition();
+        }
+
+        function revealAllMines() {
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (board[r][c].isMine && !board[r][c].isFlagged) {
+                        const cellHtml = getCellHtml(r, c);
+                        cellHtml.classList.add('revealed');
+                        cellHtml.textContent = '💣';
+                    } else if (!board[r][c].isMine && board[r][c].isFlagged) {
+                        const cellHtml = getCellHtml(r, c);
+                        cellHtml.textContent = '❌'; // False flag
+                    }
+                }
+            }
+        }
+
+        function checkWinCondition() {
+            let revealedCount = 0;
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (board[r][c].isRevealed) revealedCount++;
+                }
+            }
+            if (revealedCount === rows * cols - totalMines) {
+                gameOver = true;
+                clearInterval(timerInterval);
+                msFaceEmoji.textContent = '😎'; // Cool face for win
+                // Flag remaining mines automatically
+                flagsPlaced = totalMines;
+                updateCounterDisplay(msMineCount, 0);
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        if (board[r][c].isMine && !board[r][c].isFlagged) {
+                            const cellHtml = getCellHtml(r, c);
+                            cellHtml.textContent = '🚩';
+                        }
+                    }
+                }
+            }
+        }
+
+        msBtn.addEventListener('click', () => {
+            msModal.style.display = 'flex';
+            if (timerInterval) clearInterval(timerInterval);
+            initMinesweeper();
+        });
+
+        msCloseBtn.addEventListener('click', () => {
+            msModal.style.display = 'none';
+            if (timerInterval) clearInterval(timerInterval);
+        });
+
+        msResetBtn.addEventListener('click', () => {
+            initMinesweeper();
+        });
+
+        // Initialize empty board in background to prevent jumping
+        initMinesweeper();
+    }
 });
