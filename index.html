@@ -13,10 +13,14 @@
     <div class="container">
         <!-- The main window content (Windows 95 Dialog Style) -->
         <div class="window-container">
-            <!-- Retro Header (Banner and Counter) -->
+            <!-- Retro Header (Banner) -->
             <div class="retro-header">
                 <div class="retro-banner" data-text="もにゅのホームページだよ"></div>
-                <div class="retro-counter">
+            </div>
+
+            <!-- LED Marquee Counter -->
+            <div class="led-marquee-container">
+                <div class="led-marquee-text">
                     あなたは <span class="counter-digits" id="hit-counter">
                         <!-- Digits injected by JS -->
                         <span>0</span><span>0</span><span>0</span><span>0</span><span>0</span>
@@ -49,25 +53,27 @@
                 <!-- The character image overlapping the top right -->
                 <img src="images/character.png" alt="Character Illustration" class="character-img" id="character-img">
 
+                <!-- 吹き出し (Speech Bubble) -->
+                <div id="speech-bubble" class="speech-bubble"></div>
+
                 <!-- The crow that flies in to protect the character -->
                 <img src="images/black.png" alt="Crow" class="crow-img" id="crow-img">
 
                 <!-- Links list -->
                 <ul class="games-list">
                     <li><a href="https://bakagame.vercel.app/" target="_blank"
-                            data-description="混沌とした恋愛（？）シミュレーションゲーム。選択肢によって運命が変わる…？（バカゲー）">カオス・ラバーズ</a></li>
+                            data-description="混沌とした恋愛（？）シミュレーションゲーム。選択肢によって運命が変わる…？（バカゲー）">▶ カオス・ラバーズ</a></li>
                     <li><a href="https://sonemi-fight.vercel.app/" target="_blank"
-                            data-description="そねみちゃんが👊で戦うアクションゲーム。タイミングよく攻撃しよう">頑張れ‼そねみちゃん</a></li>
+                            data-description="そねみちゃんが👊で戦うアクションゲーム。タイミングよく攻撃しよう">▶ 頑張れ‼そねみちゃん</a></li>
                     <li><a href="https://kisekae-satoshi.vercel.app/" target="_blank"
-                            data-description="さとしを自由に着せ替えるゲーム。まゆげが取れる">Kisekae Satoshi</a></li>
+                            data-description="さとしを自由に着せ替えるゲーム。まゆげが取れる">▶ Kisekae Satoshi</a></li>
                     <li><a href="https://choco-zeta.vercel.app/" target="_blank"
-                            data-description="オリジナルのバレンタインチョコを作れるデコレーションツール">チョコメーカー</a></li>
+                            data-description="オリジナルのバレンタインチョコを作れるデコレーションツール">▶ チョコメーカー</a></li>
                     <li><a href="https://iota-phi.vercel.app/" target="_blank"
-                            data-description="イオタ先生のために曲がったものを真っ直ぐにしてください。レベル10クリアでゴールインできます">イオタ先生の「曲がっています！」</a></li>
-                    <li>
-                        <span class="new-badge">new</span>
-                        <a href="https://fruitsgame.vercel.app/" target="_blank"
-                            data-description="😈と👦をそれぞれ最大にしてからくっつけるとクリア。ハグしちゃう。">ブラさと風味ス〇カゲーム</a>
+                            data-description="イオタ先生のために曲がったものを真っ直ぐにしてください。レベル10クリアでゴールインできます">▶ イオタ先生の「曲がっています！」</a>
+                    </li>
+                    <li><a href="https://fruitsgame.vercel.app/" target="_blank"
+                            data-description="😈と👦をそれぞれ最大にしてからくっつけるとクリア。ハグしちゃう。">▶ ブラさと風味ス〇カゲーム</a>
                     </li>
                 </ul>
             </div>
@@ -79,10 +85,6 @@
         </div>
     </div>
 
-    <!-- Classic Win95 Tooltip Sub-window -->
-    <div id="description-box" class="sub-window">
-        <p id="description-text"></p>
-    </div>
 </body>
 
 </html>

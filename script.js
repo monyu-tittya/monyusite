@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const gameLinks = document.querySelectorAll('.games-list a');
-    const descriptionBox = document.getElementById('description-box');
-    const descriptionText = document.getElementById('description-text');
     const statusText = document.getElementById('status-text');
     let isHovering = false;
     let lastTappedLink = null;
@@ -15,25 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isTouchDevice) return; // スマホではホバーのツールチップ処理を無視
             const description = e.currentTarget.getAttribute('data-description');
             if (description) {
-                descriptionText.textContent = description;
-                descriptionBox.classList.add('active');
                 if (statusText) statusText.textContent = description;
                 isHovering = true;
             }
         });
 
-        // Update tooltip position based on mouse movement
-        link.addEventListener('mousemove', (e) => {
-            if (isTouchDevice || !isHovering) return;
-            const offsetX = 15;
-            const offsetY = 20;
-            descriptionBox.style.left = `${e.pageX + offsetX}px`;
-            descriptionBox.style.top = `${e.pageY + offsetY}px`;
-        });
-
         link.addEventListener('mouseleave', () => {
             if (isTouchDevice) return;
-            descriptionBox.classList.remove('active');
             if (statusText) statusText.textContent = 'Ready';
             isHovering = false;
         });
@@ -131,17 +117,58 @@ document.addEventListener('DOMContentLoaded', () => {
     if (charImg && crowImg) {
         let isCrowVisible = false;
 
-        charImg.addEventListener('click', () => {
-            if (!isCrowVisible) {
-                isCrowVisible = true;
-                crowImg.classList.add('fly-in');
-
-                // Crow leaves after 2.5 seconds
-                setTimeout(() => {
-                    crowImg.classList.remove('fly-in');
-                    isCrowVisible = false;
-                }, 2500);
+        document.addEventListener('mousemove', (e) => {
+            if (isCrowVisible) {
+                // Adjust position so the crow centers on the cursor
+                crowImg.style.top = (e.clientY - 75) + 'px';
+                crowImg.style.left = (e.clientX - 75) + 'px';
             }
         });
+
+        charImg.addEventListener('click', (e) => {
+            if (!isCrowVisible) {
+                isCrowVisible = true;
+
+                crowImg.style.top = (e.clientY - 75) + 'px';
+                crowImg.style.left = (e.clientX - 75) + 'px';
+
+                crowImg.classList.add('fly-in');
+
+                // Crow leaves after 3.5 seconds
+                setTimeout(() => {
+                    crowImg.classList.remove('fly-in');
+                    // Remove the inline styling so it goes back off-screen or fades out
+                    crowImg.style.top = '';
+                    crowImg.style.left = '';
+                    isCrowVisible = false;
+                }, 3500);
+            }
+        });
+    }
+
+    // Speech Bubble feature (Every 1 minute)
+    const speechBubble = document.getElementById('speech-bubble');
+    if (speechBubble && charImg) {
+        const lines = [
+            "おなかすいたな～",
+            "ひま～",
+            "なにしてあそぼうかな～",
+            "さとし～さ～",
+            "ブラックはどこかな～"
+        ];
+
+        setInterval(() => {
+            // Pick a random line
+            const randomLine = lines[Math.floor(Math.random() * lines.length)];
+            speechBubble.innerHTML = randomLine.replace(/\n/g, '<br>');
+
+            // Show the bubble
+            speechBubble.classList.add('active');
+
+            // Hide after 2 seconds
+            setTimeout(() => {
+                speechBubble.classList.remove('active');
+            }, 2000);
+        }, 60000); // 60000ms = 1 minute
     }
 });
