@@ -70,9 +70,6 @@ body {
 }
 
 #minesweeper-btn {
-    position: relative;
-    z-index: 20;
-    /* キャラ画像の重ね合わせより前面に出してタップを優先する */
     padding: 2px 8px;
     /* スマホでタップしやすいように判定を少し広げる */
 }
