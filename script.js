@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const baseVisits = 0;
 
         // Fetch from our Vercel Serverless API function
-        fetch('/api/counter')
+        fetch('/api/counter', { cache: 'no-store' })
             .then(res => {
                 if (!res.ok) throw new Error('Network response was not ok');
                 return res.json();

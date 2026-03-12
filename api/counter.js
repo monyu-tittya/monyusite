@@ -15,6 +15,7 @@ export default async function handler(request, response) {
             headers: {
                 Authorization: `Bearer ${KV_REST_API_TOKEN}`,
             },
+            cache: 'no-store',
         });
 
         if (!kvResponse.ok) {
@@ -22,6 +23,11 @@ export default async function handler(request, response) {
         }
 
         const data = await kvResponse.json();
+
+        // Prevent browser/CDN caching
+        response.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        response.setHeader('Pragma', 'no-cache');
+        response.setHeader('Expires', '0');
 
         // Return the incremented value
         // The KV response format for INCR is { result: <number> }
