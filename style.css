@@ -72,6 +72,8 @@ body {
 #minesweeper-btn {
     padding: 2px 8px;
     /* スマホでタップしやすいように判定を少し広げる */
+    position: relative;
+    z-index: 20;
 }
 
 .title-bar-icon {
@@ -97,6 +99,8 @@ body {
     align-items: center;
     color: #000;
     cursor: pointer;
+    position: relative;
+    z-index: 20;
 }
 
 .title-bar-controls button:active {
