@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://monyuhomepage.vercel.app/sitemap.xml
